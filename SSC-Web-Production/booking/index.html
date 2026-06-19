@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Book — Side Story Club</title>
+<title>Book SSC — Side Story Club</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=swap" rel="stylesheet"/>
 <style>
@@ -520,8 +520,13 @@ footer p { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--ink-light); }
           <label>Durasi *</label>
           <select id="e-duration">
             <option value="">Pilih durasi...</option>
-            <option value="4 jam (max half day)">Half Day (max 4 jam)</option>
-            <option value="8 jam (max full day)">Full Day (max 8 jam)</option>
+            <option value="2 jam">2 jam</option>
+            <option value="3 jam">3 jam</option>
+            <option value="4 jam (max half day)">4 jam (max half day)</option>
+            <option value="5 jam">5 jam</option>
+            <option value="6 jam">6 jam</option>
+            <option value="7 jam">7 jam</option>
+            <option value="8 jam (max full day)">8 jam (max full day)</option>
           </select>
           <span class="hint">Lebih dari batas paket = biaya tambahan di akhir</span>
         </div>
@@ -592,7 +597,7 @@ footer p { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--ink-light); }
           <div class="pay-label">Down Payment 30%</div>
           <div class="pay-amount" id="pay-dp-amount">IDR 450,000</div>
           <span class="pay-badge">Recommended</span>
-          <div class="pay-note">Sisa pembayaran dilunasi H-7 event</div>
+          <div class="pay-note">Sisa dilunasi H-10 sebelum event</div>
         </div>
       </div>
 
@@ -602,10 +607,10 @@ footer p { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--ink-light); }
         <ul>
           <li>Durasi melebihi paket yang dipilih = biaya tambahan ditagihkan di akhir event.</li>
           <li>Pembatalan setelah pembayaran: dikenakan potongan 20% dari total harga paket.</li>
-          <li>Reschedule dapat dilakukan max H-10 sebelum event.</li>
-          <li>Jika reschedule tidak menemukan slot yang sesuai dan berujung pembatalan, potongan 20% tetap berlaku.</li>
-          <li>Pelunasan DP wajib sebelum H-7 event.</li>
           <li>Refund akan diproses maksimal 7 hari kerja setelah konfirmasi pembatalan.</li>
+          <li>Reschedule dapat dilakukan maksimal H-10 sebelum event.</li>
+          <li>Jika reschedule tidak menemukan slot yang sesuai dan berujung pembatalan, potongan 20% tetap berlaku.</li>
+          <li>Pelunasan DP wajib sebelum H-10 event.</li>
         </ul>
       </div>
 
@@ -648,7 +653,7 @@ footer p { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--ink-light); }
     </form>
   </div>
 
-  <!-- ════════ SCREEN 3: SUCCESS (collab) ════════ -->
+  <!-- ════════ SCREEN: SUCCESS (collab form submit) ════════ -->
   <div class="screen" id="screen-success-collab">
     <div class="success-wrap">
       <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -667,6 +672,61 @@ footer p { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--ink-light); }
     </div>
   </div>
 
+  <!-- ════════ SCREEN: PAYMENT SUCCESS ════════ -->
+  <div class="screen" id="screen-payment-success">
+    <div class="success-wrap">
+      <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="32,6 46,22 40,48 24,48 18,22" stroke="#3a3835" stroke-width="1.4" fill="#ede9e0"/>
+        <polygon points="32,6 46,22 32,28 18,22" stroke="#3a3835" stroke-width="1" fill="#d8d4ca"/>
+        <polygon points="24,48 40,48 32,28" stroke="#3a3835" stroke-width="1" fill="#c8c4ba"/>
+        <ellipse cx="32" cy="50" rx="10" ry="3.5" stroke="#3a3835" stroke-width="1" fill="#e8e4da"/>
+        <path d="M24 30 L29 36 L40 22" stroke="#3a3835" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <h2>Quest Confirmed!</h2>
+      <p class="sub">Pembayaran kamu berhasil diterima.</p>
+      <div class="success-note" style="margin-top:1.5rem;">
+        Tim Side Story Club akan menghubungi kamu via <strong>WhatsApp atau Email</strong> maksimal <strong>1×24 jam di hari kerja</strong> untuk konfirmasi detail event dan langkah selanjutnya. Terima kasih sudah memulai quest bersama kami! ✦
+      </div>
+      <a href="/" style="display:inline-block;margin-top:2rem;" class="btn-ghost">← Kembali ke Guild</a>
+    </div>
+  </div>
+
+  <!-- ════════ SCREEN: PAYMENT PENDING ════════ -->
+  <div class="screen" id="screen-payment-pending">
+    <div class="success-wrap">
+      <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="22" stroke="#3a3835" stroke-width="1.4" fill="#ede9e0"/>
+        <path d="M32 20 L32 32 L40 38" stroke="#3a3835" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <h2>Payment Pending</h2>
+      <p class="sub">Pembayaran kamu sedang diproses.</p>
+      <div class="success-note" style="margin-top:1.5rem;">
+        Jika kamu menggunakan transfer bank atau metode pembayaran tertunda lainnya, mohon selesaikan dalam waktu yang ditentukan. Setelah pembayaran terkonfirmasi, tim kami akan menghubungi via WhatsApp maksimal <strong>1×24 jam di hari kerja</strong>.
+      </div>
+      <a href="/" style="display:inline-block;margin-top:2rem;" class="btn-ghost">← Kembali ke Guild</a>
+    </div>
+  </div>
+
+  <!-- ════════ SCREEN: PAYMENT ERROR ════════ -->
+  <div class="screen" id="screen-payment-error">
+    <div class="success-wrap">
+      <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="22" stroke="#3a3835" stroke-width="1.4" fill="#ede9e0"/>
+        <line x1="24" y1="24" x2="40" y2="40" stroke="#8b3a3a" stroke-width="2" stroke-linecap="round"/>
+        <line x1="40" y1="24" x2="24" y2="40" stroke="#8b3a3a" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <h2>Payment Failed</h2>
+      <p class="sub">Terjadi kendala pada pembayaran kamu.</p>
+      <div class="success-note" style="margin-top:1.5rem;">
+        Pembayaran tidak berhasil diproses. Silakan coba lagi, atau hubungi kami langsung jika dana sudah terpotong dari rekening kamu.
+      </div>
+      <div style="display:flex; gap:0.8rem; justify-content:center; margin-top:1.5rem; flex-wrap:wrap;">
+        <a href="/booking/" class="btn-primary" style="text-decoration:none;">Coba Lagi</a>
+        <a href="https://wa.me/628813215958" target="_blank" rel="noopener" class="btn-ghost">Hubungi Kami</a>
+      </div>
+    </div>
+  </div>
+
 </div><!-- end .page -->
 
 <footer>
@@ -678,10 +738,10 @@ footer p { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--ink-light); }
 // PAYMENT LINKS — ganti dengan URL asli kamu
 // ═══════════════════════════════════════════
 const PAYMENT_LINKS = {
-  half_full: 'https://app.sandbox.midtrans.com/payment-links/f5431235-fbae-45aa-a1a6-472b87d00592-W0dC64lQ',
-  half_dp:   'https://app.sandbox.midtrans.com/payment-links/7951cdeb-f688-45c4-a830-d88cba66e4b7-uScxga9T',
-  full_full: 'https://app.sandbox.midtrans.com/payment-links/b9e1ad38-2148-4315-9a48-76dbdd6a4d61-FqfBwIXv',
-  full_dp:   'https://app.sandbox.midtrans.com/payment-links/7b6bc87d-ce67-495c-907b-0e74a7ee4338-aYjfD0ZD',
+  half_full: 'PAYMENT_LINK_HALF_FULL_HERE',
+  half_dp:   'PAYMENT_LINK_HALF_DP_HERE',
+  full_full: 'PAYMENT_LINK_FULL_FULL_HERE',
+  full_dp:   'PAYMENT_LINK_FULL_DP_HERE',
 };
 
 const PRICES = {
@@ -920,11 +980,20 @@ Instagram: @sidestory_club
 }
 
 // ═══════════════════════════════════════════
-// CHECK URL PARAM (post-submit redirect)
+// CHECK URL PARAM (post-submit / post-payment redirect)
 // ═══════════════════════════════════════════
-const urlParam = new URLSearchParams(window.location.search).get('submitted');
-if (urlParam === 'collab') {
+const urlParams2  = new URLSearchParams(window.location.search);
+const submittedParam = urlParams2.get('submitted');
+const statusParam     = urlParams2.get('status');
+
+if (submittedParam === 'collab') {
   updateSteps(3); showScreen('screen-success-collab');
+} else if (statusParam === 'success') {
+  updateSteps(3); showScreen('screen-payment-success');
+} else if (statusParam === 'pending') {
+  updateSteps(3); showScreen('screen-payment-pending');
+} else if (statusParam === 'error' || statusParam === 'failed') {
+  showScreen('screen-payment-error');
 }
 
 // Init
