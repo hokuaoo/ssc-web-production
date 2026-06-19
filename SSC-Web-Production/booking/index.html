@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Book — Side Story Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=swap" rel="stylesheet"/>
+<style>
+/* ─── VARIABLES ─── */
+:root {
+  --ink: #1a1a18; --ink-mid: #3a3835; --ink-light: #6b6860;
+  --paper: #f5f2ec; --paper-dark: #e8e4da; --paper-mid: #ede9e0;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: 'Special Elite', serif; font-size: 16px;
+  line-height: 1.7; min-height: 100vh;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; opacity: 0.03; pointer-events: none; z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+}
+h1,h2,h3 { font-family: 'Cinzel Decorative', serif; letter-spacing: 0.03em; }
+.fell { font-family: 'IM Fell English', serif; }
+.fell-i { font-family: 'IM Fell English', serif; font-style: italic; }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--paper); border-bottom: 1px dashed var(--ink-light);
+  padding: 0.7rem 2rem; display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'Cinzel Decorative', serif; font-size: 0.78rem;
+  letter-spacing: 0.08em; display: flex; align-items: center; gap: 0.5rem;
+  text-decoration: none; color: var(--ink);
+}
+.nav-logo img { width: 22px; height: 22px; object-fit: contain; }
+.nav-back {
+  font-family: 'Special Elite', serif; font-size: 0.75rem;
+  letter-spacing: 0.08em; color: var(--ink-light); text-decoration: none;
+  display: flex; align-items: center; gap: 0.4rem;
+  border: 1px dashed var(--ink-light); padding: 0.3rem 0.8rem; border-radius: 1px;
+  transition: background 0.2s;
+}
+.nav-back:hover { background: var(--paper-dark); }
+
+/* ─── PAGE WRAPPER ─── */
+.page { max-width: 720px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+
+/* ─── PAGE HEADER ─── */
+.page-header { text-align: center; margin-bottom: 3rem; }
+.page-header .eyebrow {
+  font-size: 0.65rem; letter-spacing: 0.2em; color: var(--ink-light); margin-bottom: 1rem; display: block;
+}
+.page-header h1 { font-size: clamp(1.4rem, 4vw, 2rem); margin-bottom: 0.5rem; }
+.page-header .sub { font-size: 0.95rem; color: var(--ink-mid); max-width: 480px; margin: 0 auto; }
+.ornament-line {
+  display: flex; align-items: center; gap: 0.7rem;
+  margin: 0.8rem auto; color: var(--ink-light); font-size: 0.9rem; max-width: 200px;
+}
+.ornament-line::before, .ornament-line::after {
+  content: ''; flex: 1; height: 1px; background: var(--ink-light);
+}
+
+/* ─── STEP INDICATOR ─── */
+.steps-bar {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; margin-bottom: 3rem;
+}
+.step-pip {
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  position: relative;
+}
+.step-pip .num {
+  width: 32px; height: 32px; border: 1.5px solid var(--ink-light);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel Decorative', serif; font-size: 0.72rem; color: var(--ink-light);
+  background: var(--paper); position: relative; z-index: 1; transition: all 0.3s;
+}
+.step-pip.active .num { border-color: var(--ink); color: var(--ink); background: var(--paper-mid); }
+.step-pip.done .num { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.step-pip .lbl {
+  font-size: 0.6rem; letter-spacing: 0.1em; color: var(--ink-light);
+  white-space: nowrap; text-align: center;
+}
+.step-pip.active .lbl { color: var(--ink); }
+.step-connector {
+  width: 60px; height: 1px; background: var(--ink-light);
+  border-top: 1px dashed var(--ink-light); margin-bottom: 1.4rem; flex-shrink: 0;
+}
+@media(max-width:480px){ .step-connector { width: 30px; } .step-pip .lbl { display: none; } }
+
+/* ─── SCREENS ─── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ─── BOOKING TYPE CARDS ─── */
+.type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.type-card {
+  border: 1.5px dashed var(--ink-light); padding: 2rem 1.5rem;
+  cursor: pointer; background: var(--paper); text-align: center;
+  transition: border-color 0.2s, background 0.2s; position: relative;
+}
+.type-card:hover { border-color: var(--ink-mid); background: var(--paper-mid); }
+.type-card .tc-icon { margin: 0 auto 1rem; display: block; opacity: 0.75; }
+.type-card h3 { font-size: 0.85rem; margin-bottom: 0.4rem; color: var(--ink); }
+.type-card p { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.88rem; color: var(--ink-mid); line-height: 1.5; }
+.type-card .tc-badge {
+  position: absolute; top: 0.8rem; right: 0.8rem;
+  font-size: 0.58rem; letter-spacing: 0.1em; color: var(--ink-light);
+  border: 1px dashed var(--ink-light); padding: 0.1rem 0.45rem;
+}
+.type-card .tc-arrow {
+  display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.2rem;
+  font-size: 0.72rem; letter-spacing: 0.1em; color: var(--ink-light);
+}
+@media(max-width:500px){ .type-grid { grid-template-columns: 1fr; } }
+
+/* ─── FORMS ─── */
+.form-section { margin-bottom: 2rem; }
+.form-section-title {
+  font-family: 'Cinzel Decorative', serif; font-size: 0.72rem;
+  color: var(--ink); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem;
+  padding-bottom: 0.5rem; border-bottom: 1px dashed var(--ink-light);
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem 1rem; }
+.form-grid.single { grid-template-columns: 1fr; }
+.field { display: flex; flex-direction: column; gap: 0.3rem; }
+.field label {
+  font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-light);
+}
+.field input, .field textarea, .field select {
+  font-family: 'IM Fell English', serif; font-size: 0.92rem; color: var(--ink);
+  background: var(--paper-mid); border: 1px solid var(--ink-light);
+  padding: 0.55rem 0.7rem; border-radius: 1px; outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+  border-color: var(--ink); background: var(--paper);
+}
+.field textarea { resize: vertical; min-height: 80px; }
+.field .hint { font-size: 0.72rem; color: var(--ink-light); font-family: 'IM Fell English', serif; font-style: italic; }
+.field input.error { border-color: #8b3a3a; }
+
+/* ─── PACKAGE SELECTOR ─── */
+.pkg-grid { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1rem; }
+.pkg-option {
+  border: 1.5px dashed var(--ink-light); padding: 1rem 1.2rem;
+  cursor: pointer; background: var(--paper); transition: all 0.2s;
+  display: flex; align-items: flex-start; gap: 1rem;
+}
+.pkg-option.active { border-color: var(--ink); border-style: solid; background: var(--paper-mid); }
+.pkg-radio {
+  width: 18px; height: 18px; border: 1.5px solid var(--ink-light);
+  border-radius: 50%; flex-shrink: 0; margin-top: 0.15rem;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.pkg-option.active .pkg-radio { border-color: var(--ink); }
+.pkg-dot { width: 8px; height: 8px; border-radius: 50%; transition: background 0.2s; }
+.pkg-option.active .pkg-dot { background: var(--ink); }
+.pkg-body { flex: 1; }
+.pkg-name { font-family: 'Cinzel Decorative', serif; font-size: 0.75rem; color: var(--ink); }
+.pkg-desc { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.82rem; color: var(--ink-light); margin-top: 0.15rem; }
+.pkg-price-col { text-align: right; flex-shrink: 0; }
+.pkg-price { font-family: 'Cinzel Decorative', serif; font-size: 1rem; color: var(--ink); display: block; }
+.pkg-sub { font-size: 0.65rem; letter-spacing: 0.08em; color: var(--ink-light); }
+
+/* ─── PAYMENT OPTIONS ─── */
+.pay-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1rem; }
+.pay-opt {
+  border: 1.5px dashed var(--ink-light); padding: 1rem;
+  cursor: pointer; background: var(--paper); text-align: center; transition: all 0.2s;
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+}
+.pay-opt.active { border-color: var(--ink); border-style: solid; background: var(--paper-mid); }
+.pay-opt .pay-label {
+  font-family: 'Cinzel Decorative', serif; font-size: 0.7rem; color: var(--ink);
+}
+.pay-opt .pay-amount {
+  font-family: 'Cinzel Decorative', serif; font-size: 1.1rem; color: var(--ink);
+}
+.pay-opt .pay-note {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--ink-light); line-height: 1.4;
+}
+.pay-badge {
+  display: inline-block; font-size: 0.6rem; letter-spacing: 0.1em;
+  background: var(--ink); color: var(--paper); padding: 0.1rem 0.5rem; margin-top: 0.2rem;
+}
+
+/* ─── TERMS BOX ─── */
+.terms-box {
+  border: 1px dashed var(--ink-light); background: var(--paper-mid);
+  padding: 1rem 1.2rem; margin: 1.5rem 0;
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 0.85rem; color: var(--ink-mid); line-height: 1.7;
+}
+.terms-box ul { margin: 0.4rem 0 0 1.2rem; }
+.terms-box li { margin-bottom: 0.2rem; }
+
+/* ─── PAYMENT BUTTON ─── */
+.pay-btn-wrap { margin-top: 1.5rem; text-align: center; }
+.btn-pay {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  font-family: 'Special Elite', serif; font-size: 0.85rem;
+  letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none;
+  color: var(--paper); background: var(--ink);
+  border: none; padding: 1rem 2.5rem; cursor: pointer;
+  border-radius: 1px; transition: background 0.2s; position: relative;
+}
+.btn-pay::after {
+  content: ''; position: absolute; inset: 3px;
+  border: 1px solid rgba(255,255,255,0.15); pointer-events: none;
+}
+.btn-pay:hover { background: var(--ink-mid); }
+.btn-pay:disabled { opacity: 0.5; cursor: not-allowed; }
+.pay-disclaimer {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 0.78rem; color: var(--ink-light); margin-top: 0.8rem;
+}
+
+/* ─── SUBMIT / NAV BUTTONS ─── */
+.form-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--ink-light);
+}
+.btn-primary {
+  font-family: 'Special Elite', serif; font-size: 0.8rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--paper);
+  background: var(--ink); border: none; padding: 0.75rem 2rem;
+  cursor: pointer; border-radius: 1px; transition: background 0.2s;
+}
+.btn-primary:hover { background: var(--ink-mid); }
+.btn-ghost {
+  font-family: 'Special Elite', serif; font-size: 0.78rem;
+  letter-spacing: 0.08em; color: var(--ink-light);
+  background: none; border: 1px dashed var(--ink-light);
+  padding: 0.7rem 1.4rem; cursor: pointer; border-radius: 1px; transition: background 0.2s;
+}
+.btn-ghost:hover { background: var(--paper-dark); }
+
+/* ─── SUCCESS SCREEN ─── */
+.success-wrap {
+  text-align: center; padding: 2rem 1rem;
+}
+.success-wrap h2 { margin: 1.2rem 0 0.6rem; font-size: 1.2rem; }
+.success-wrap .sub { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.95rem; color: var(--ink-mid); }
+.success-details {
+  border: 1.5px dashed var(--ink-light); background: var(--paper-mid);
+  padding: 1.2rem 1.5rem; margin: 1.8rem auto; max-width: 400px; text-align: left;
+}
+.sd-row {
+  display: flex; justify-content: space-between;
+  padding: 0.4rem 0; border-bottom: 1px dotted var(--ink-light);
+  font-size: 0.82rem;
+}
+.sd-row:last-child { border-bottom: none; }
+.sd-key { color: var(--ink-light); letter-spacing: 0.06em; }
+.sd-val { font-family: 'IM Fell English', serif; color: var(--ink-mid); }
+.success-note {
+  border: 1px dashed var(--ink-light); padding: 1rem 1.5rem;
+  max-width: 400px; margin: 0 auto;
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 0.88rem; color: var(--ink-mid); line-height: 1.65; text-align: left;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  text-align: center; padding: 2rem;
+  border-top: 1px dashed var(--ink-light); margin-top: 4rem;
+}
+footer p { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--ink-light); }
+
+/* ─── MOBILE ─── */
+@media(max-width:640px){
+  nav { padding: 0.7rem 1rem; }
+  .page { padding: 5.5rem 1.2rem 3rem; }
+  .form-grid { grid-template-columns: 1fr; }
+  .pay-opts { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="https://res.cloudinary.com/dnqt7v5iv/image/upload/f_auto,q_auto/v1780756193/logo_xsbo10.png" alt="SSC"/>
+    Side Story Club
+  </a>
+  <a href="/" class="nav-back">← Back to Guild</a>
+</nav>
+
+<div class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <span class="eyebrow">✦ &nbsp; Side Story Club &nbsp; ✦</span>
+    <h1>Start a Quest</h1>
+    <div class="ornament-line">✦</div>
+    <p class="sub fell-i">
+      Pilih jenis kolaborasi yang kamu mau — kami siap hadir di tempat kamu.
+    </p>
+  </div>
+
+  <!-- STEP INDICATOR -->
+  <div class="steps-bar" id="steps-bar">
+    <div class="step-pip active" id="pip-1">
+      <div class="num">I</div>
+      <span class="lbl">Type</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-pip" id="pip-2">
+      <div class="num">II</div>
+      <span class="lbl">Details</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-pip" id="pip-3">
+      <div class="num">III</div>
+      <span class="lbl">Payment</span>
+    </div>
+  </div>
+
+  <!-- ════════ SCREEN 1: CHOOSE TYPE ════════ -->
+  <div class="screen active" id="screen-type">
+    <div class="type-grid">
+
+      <!-- COLLAB KIOSK -->
+      <div class="type-card" onclick="chooseType('collab')">
+        <svg class="tc-icon" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- building sketch -->
+          <rect x="10" y="20" width="36" height="28" stroke="#3a3835" stroke-width="1.2" fill="#ede9e0"/>
+          <rect x="22" y="34" width="12" height="14" stroke="#3a3835" stroke-width="1" fill="#d8d4ca"/>
+          <rect x="14" y="26" width="8" height="6" stroke="#3a3835" stroke-width="0.9" fill="#c8c4ba"/>
+          <rect x="34" y="26" width="8" height="6" stroke="#3a3835" stroke-width="0.9" fill="#c8c4ba"/>
+          <path d="M6 22 L28 8 L50 22" stroke="#3a3835" stroke-width="1.2" fill="#ede9e0"/>
+          <line x1="28" y1="8" x2="28" y2="4" stroke="#3a3835" stroke-width="0.9"/>
+          <path d="M28 4 L33 7 L28 10Z" fill="#3a3835" opacity="0.5"/>
+        </svg>
+        <span class="tc-badge">Venue</span>
+        <h3>Kiosk Collab</h3>
+        <p>Host kiosk SSC di venue kamu — cafe, tempat wisata, atau ruang publik.</p>
+        <span class="tc-arrow">Choose this ➤</span>
+      </div>
+
+      <!-- EVENT -->
+      <div class="type-card" onclick="chooseType('event')">
+        <svg class="tc-icon" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- banner/scroll sketch -->
+          <rect x="8" y="16" width="40" height="28" rx="2" stroke="#3a3835" stroke-width="1.2" fill="#ede9e0"/>
+          <path d="M8 16 Q4 30 8 44" stroke="#3a3835" stroke-width="1" fill="none"/>
+          <path d="M48 16 Q52 30 48 44" stroke="#3a3835" stroke-width="1" fill="none"/>
+          <line x1="14" y1="26" x2="42" y2="26" stroke="#6b6860" stroke-width="0.8"/>
+          <line x1="14" y1="32" x2="42" y2="32" stroke="#6b6860" stroke-width="0.8"/>
+          <line x1="14" y1="38" x2="34" y2="38" stroke="#6b6860" stroke-width="0.8"/>
+          <!-- stars -->
+          <text x="38" y="42" font-size="8" fill="#a0a098" font-family="serif">✦</text>
+        </svg>
+        <span class="tc-badge">Event</span>
+        <h3>Event Rental</h3>
+        <p>Sewa SSC untuk acara kamu — wedding, brand activation, private party.</p>
+        <span class="tc-arrow">Choose this ➤</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════ SCREEN 2A: COLLAB FORM ════════ -->
+  <div class="screen" id="screen-collab">
+
+    <!-- Applicant -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Data Diri
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Nama Lengkap *</label>
+          <input type="text" id="c-name" placeholder="Nama kamu"/>
+        </div>
+        <div class="field">
+          <label>Nomor WhatsApp *</label>
+          <input type="tel" id="c-wa" placeholder="08xx-xxxx-xxxx"/>
+        </div>
+        <div class="field">
+          <label>Email *</label>
+          <input type="email" id="c-email" placeholder="email@domain.com"/>
+        </div>
+        <div class="field">
+          <label>Posisi / Jabatan *</label>
+          <input type="text" id="c-role" placeholder="Owner · Marketing · HR · dll"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Venue -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Detail Venue
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Nama Tempat *</label>
+          <input type="text" id="c-venue" placeholder="Nama cafe / tempat wisata / dll"/>
+        </div>
+        <div class="field">
+          <label>Jenis Tempat *</label>
+          <input type="text" id="c-vtype" placeholder="Cafe · Tempat Wisata · Co-working · dll"/>
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>Alamat Lengkap *</label>
+          <input type="text" id="c-addr" placeholder="Jl. ..., Kecamatan, Kota"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estimasi -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Traffic &amp; Catatan
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Estimasi Pengunjung Harian</label>
+          <input type="text" id="c-traffic" placeholder="~50 orang / hari"/>
+        </div>
+        <div class="field">
+          <label>Referensi (opsional)</label>
+          <input type="text" id="c-ref" placeholder="Dari mana tahu SSC?"/>
+        </div>
+      </div>
+      <div class="form-grid single" style="margin-top:0.8rem;">
+        <div class="field">
+          <label>Pesan / Pertanyaan Tambahan</label>
+          <textarea id="c-notes" placeholder="Hal lain yang ingin disampaikan..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn-ghost" onclick="goBack('type')">← Back</button>
+      <button class="btn-primary" onclick="submitCollab()">Kirim Permintaan ➤</button>
+    </div>
+
+    <!-- Hidden Formspree form -->
+    <form id="formspree-collab" action="https://formspree.io/f/mykaarqy" method="POST" style="display:none;">
+      <input type="hidden" name="booking_type" value="Kiosk Collab"/>
+      <input type="hidden" name="nama" id="fs-c-name"/>
+      <input type="hidden" name="whatsapp" id="fs-c-wa"/>
+      <input type="hidden" name="email" id="fs-c-email"/>
+      <input type="hidden" name="posisi" id="fs-c-role"/>
+      <input type="hidden" name="venue" id="fs-c-venue"/>
+      <input type="hidden" name="jenis_tempat" id="fs-c-vtype"/>
+      <input type="hidden" name="alamat" id="fs-c-addr"/>
+      <input type="hidden" name="traffic_harian" id="fs-c-traffic"/>
+      <input type="hidden" name="referensi" id="fs-c-ref"/>
+      <input type="hidden" name="catatan" id="fs-c-notes"/>
+      <input type="hidden" name="_subject" value="[SSC Booking] Kiosk Collab Request"/>
+      <input type="hidden" name="_next" value="https://sidestoryclub.my.id/booking/?submitted=collab"/>
+    </form>
+  </div>
+
+  <!-- ════════ SCREEN 2B: EVENT FORM ════════ -->
+  <div class="screen" id="screen-event">
+
+    <!-- Applicant -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Data Diri
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Nama / Organisasi *</label>
+          <input type="text" id="e-name" placeholder="Nama atau nama brand"/>
+        </div>
+        <div class="field">
+          <label>Nomor WhatsApp *</label>
+          <input type="tel" id="e-wa" placeholder="08xx-xxxx-xxxx"/>
+        </div>
+        <div class="field">
+          <label>Email *</label>
+          <input type="email" id="e-email" placeholder="email@domain.com"/>
+        </div>
+        <div class="field">
+          <label>Posisi / Jabatan *</label>
+          <input type="text" id="e-role" placeholder="Personal · EO · Brand · dll"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event detail -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Detail Event
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Nama / Jenis Acara *</label>
+          <input type="text" id="e-evname" placeholder="Wedding · Brand Activation · Wisuda · dll"/>
+        </div>
+        <div class="field">
+          <label>Tanggal Event *</label>
+          <input type="date" id="e-date"/>
+        </div>
+        <div class="field">
+          <label>Waktu Mulai *</label>
+          <input type="time" id="e-time"/>
+        </div>
+        <div class="field">
+          <label>Durasi *</label>
+          <select id="e-duration">
+            <option value="">Pilih durasi...</option>
+            <option value="4 jam (max half day)">Half Day (max 4 jam)</option>
+            <option value="8 jam (max full day)">Full Day (max 8 jam)</option>
+          </select>
+          <span class="hint">Lebih dari batas paket = biaya tambahan di akhir</span>
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>Lokasi / Venue *</label>
+          <input type="text" id="e-loc" placeholder="Nama venue, alamat, kota"/>
+        </div>
+        <div class="field">
+          <label>Estimasi Tamu</label>
+          <input type="text" id="e-guests" placeholder="~100 orang"/>
+        </div>
+        <div class="field">
+          <label>Custom Frame?</label>
+          <select id="e-frame">
+            <option value="Belum tahu">Belum tahu</option>
+            <option value="Ya, butuh custom frame">Ya, butuh custom frame</option>
+            <option value="Tidak perlu">Tidak perlu, pakai default</option>
+          </select>
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>Deskripsi Acara / Catatan</label>
+          <textarea id="e-notes" placeholder="Tema, konsep, atau hal lain yang perlu kami tahu..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Package + Payment -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        Pilih Paket &amp; Pembayaran
+      </div>
+
+      <!-- Package -->
+      <div class="pkg-grid">
+        <div class="pkg-option active" id="pkg-half" onclick="selectPkg('half')">
+          <div class="pkg-radio"><span class="pkg-dot"></span></div>
+          <div class="pkg-body">
+            <div class="pkg-name">Half Day Quest</div>
+            <div class="pkg-desc">Max 4 jam · Unlimited thermal prints · Custom frame</div>
+          </div>
+          <div class="pkg-price-col">
+            <span class="pkg-price">1,500,000</span>
+            <span class="pkg-sub">IDR · full</span>
+          </div>
+        </div>
+        <div class="pkg-option" id="pkg-full" onclick="selectPkg('full')">
+          <div class="pkg-radio"><span class="pkg-dot"></span></div>
+          <div class="pkg-body">
+            <div class="pkg-name">Full Day Quest</div>
+            <div class="pkg-desc">Max 8 jam · Unlimited thermal prints · Custom frame</div>
+          </div>
+          <div class="pkg-price-col">
+            <span class="pkg-price">2,500,000</span>
+            <span class="pkg-sub">IDR · full</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment options — auto-update based on pkg -->
+      <div class="pay-opts">
+        <div class="pay-opt active" id="pay-full" onclick="selectPay('full')">
+          <div class="pay-label">Full Payment</div>
+          <div class="pay-amount" id="pay-full-amount">IDR 1,500,000</div>
+          <div class="pay-note">Langsung lunas</div>
+        </div>
+        <div class="pay-opt" id="pay-dp" onclick="selectPay('dp')">
+          <div class="pay-label">Down Payment 30%</div>
+          <div class="pay-amount" id="pay-dp-amount">IDR 450,000</div>
+          <span class="pay-badge">Recommended</span>
+          <div class="pay-note">Sisa pembayaran dilunasi H-7 event</div>
+        </div>
+      </div>
+
+      <!-- Terms -->
+      <div class="terms-box">
+        <strong>Ketentuan pembayaran:</strong>
+        <ul>
+          <li>Durasi melebihi paket yang dipilih = biaya tambahan ditagihkan di akhir event.</li>
+          <li>Pembatalan setelah pembayaran: dikenakan potongan 20% dari total harga paket.</li>
+          <li>Reschedule dapat dilakukan max H-10 sebelum event.</li>
+          <li>Jika reschedule tidak menemukan slot yang sesuai dan berujung pembatalan, potongan 20% tetap berlaku.</li>
+          <li>Pelunasan DP wajib sebelum H-7 event.</li>
+          <li>Refund akan diproses maksimal 7 hari kerja setelah konfirmasi pembatalan.</li>
+        </ul>
+      </div>
+
+      <!-- Pay button -->
+      <div class="pay-btn-wrap">
+        <a id="pay-link-btn" href="#" target="_blank" rel="noopener"
+           class="btn-pay" onclick="handlePayClick(event)">
+          ➤ &nbsp; <span id="pay-btn-label">Bayar Sekarang</span>
+        </a>
+        <p class="pay-disclaimer fell-i">
+          Kamu akan diarahkan ke halaman pembayaran Midtrans yang aman.<br/>
+          Setelah pembayaran, tim kami akan menghubungi via WhatsApp untuk konfirmasi detail.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn-ghost" onclick="goBack('type')">← Back</button>
+    </div>
+
+    <!-- Hidden Formspree form for event data -->
+    <form id="formspree-event" action="https://formspree.io/f/mykaarqy" method="POST" style="display:none;">
+      <input type="hidden" name="booking_type" value="Event Rental"/>
+      <input type="hidden" name="nama" id="fs-e-name"/>
+      <input type="hidden" name="whatsapp" id="fs-e-wa"/>
+      <input type="hidden" name="email" id="fs-e-email"/>
+      <input type="hidden" name="posisi" id="fs-e-role"/>
+      <input type="hidden" name="nama_event" id="fs-e-evname"/>
+      <input type="hidden" name="tanggal" id="fs-e-date"/>
+      <input type="hidden" name="waktu" id="fs-e-time"/>
+      <input type="hidden" name="durasi" id="fs-e-duration"/>
+      <input type="hidden" name="lokasi" id="fs-e-loc"/>
+      <input type="hidden" name="estimasi_tamu" id="fs-e-guests"/>
+      <input type="hidden" name="custom_frame" id="fs-e-frame"/>
+      <input type="hidden" name="paket" id="fs-e-pkg"/>
+      <input type="hidden" name="tipe_bayar" id="fs-e-pay"/>
+      <input type="hidden" name="catatan" id="fs-e-notes"/>
+      <input type="hidden" name="_subject" value="[SSC Booking] Event Rental Request"/>
+      <input type="hidden" name="_next" value="https://sidestoryclub.my.id/booking/?submitted=event"/>
+    </form>
+  </div>
+
+  <!-- ════════ SCREEN 3: SUCCESS (collab) ════════ -->
+  <div class="screen" id="screen-success-collab">
+    <div class="success-wrap">
+      <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="32,6 46,22 40,48 24,48 18,22" stroke="#3a3835" stroke-width="1.4" fill="#ede9e0"/>
+        <polygon points="32,6 46,22 32,28 18,22" stroke="#3a3835" stroke-width="1" fill="#d8d4ca"/>
+        <polygon points="24,48 40,48 32,28" stroke="#3a3835" stroke-width="1" fill="#c8c4ba"/>
+        <ellipse cx="32" cy="50" rx="10" ry="3.5" stroke="#3a3835" stroke-width="1" fill="#e8e4da"/>
+        <path d="M24 30 L29 36 L40 22" stroke="#3a3835" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <h2>Quest Request Sent!</h2>
+      <p class="sub">Permintaan kolaborasi kamu sudah kami terima.</p>
+      <div class="success-note" style="margin-top:1.5rem;">
+        Tim SSC akan menghubungi kamu via <strong>WhatsApp atau Email</strong> dalam 1×24 jam untuk diskusi lebih lanjut. Keep your phone nearby, adventurer! ✦
+      </div>
+      <a href="/" style="display:inline-block;margin-top:2rem;" class="btn-ghost">← Kembali ke Guild</a>
+    </div>
+  </div>
+
+</div><!-- end .page -->
+
+<footer>
+  <p>✦ &nbsp; Side Story Club &nbsp; · &nbsp; Yogyakarta, Indonesia &nbsp; · &nbsp; "The main quest can wait." &nbsp; ✦</p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════
+// PAYMENT LINKS — ganti dengan URL asli kamu
+// ═══════════════════════════════════════════
+const PAYMENT_LINKS = {
+  half_full: 'https://app.sandbox.midtrans.com/payment-links/fe3b545a-ca1a-47a3-9397-e84fc938726d-lI1zUPQh',
+  half_dp:   'https://app.sandbox.midtrans.com/payment-links/2981e175-124b-41b1-b717-962df096974b-lO9rrIru',
+  full_full: 'https://app.sandbox.midtrans.com/payment-links/c85d244f-fbf8-4a06-a621-25bd106eccb8-dRApeXsz',
+  full_dp:   'https://app.sandbox.midtrans.com/payment-links/0c8dc82a-f105-4f0e-a621-e9369dfb187f-nIM83tfP',
+};
+
+const PRICES = {
+  half: { full: 1500000, dp: 450000 },
+  full: { full: 2500000, dp: 750000 },
+};
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let currentType   = null;
+let currentPkg    = 'half';
+let currentPay    = 'full';
+let eventFormValid = false;
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateSteps(active) {
+  [1,2,3].forEach(n => {
+    const pip = document.getElementById('pip-' + n);
+    pip.classList.remove('active','done');
+    if (n < active) pip.classList.add('done');
+    else if (n === active) pip.classList.add('active');
+  });
+}
+
+function chooseType(type) {
+  currentType = type;
+  updateSteps(2);
+  showScreen(type === 'collab' ? 'screen-collab' : 'screen-event');
+}
+
+function goBack(to) {
+  if (to === 'type') { updateSteps(1); showScreen('screen-type'); }
+}
+
+// ═══════════════════════════════════════════
+// PACKAGE & PAYMENT SELECTOR
+// ═══════════════════════════════════════════
+function selectPkg(pkg) {
+  currentPkg = pkg;
+  document.getElementById('pkg-half').classList.toggle('active', pkg === 'half');
+  document.getElementById('pkg-full').classList.toggle('active', pkg === 'full');
+  updatePayAmounts();
+}
+
+function selectPay(pay) {
+  currentPay = pay;
+  document.getElementById('pay-full').classList.toggle('active', pay === 'full');
+  document.getElementById('pay-dp').classList.toggle('active', pay === 'dp');
+  updatePayAmounts();
+}
+
+function updatePayAmounts() {
+  const prices = PRICES[currentPkg];
+  const fmt = n => 'IDR ' + n.toLocaleString('id-ID');
+  document.getElementById('pay-full-amount').textContent = fmt(prices.full);
+  document.getElementById('pay-dp-amount').textContent   = fmt(prices.dp);
+
+  const pkgLabel = currentPkg === 'half' ? 'Half Day' : 'Full Day';
+  const payLabel = currentPay === 'full' ? 'Full Payment' : 'DP 30%';
+  document.getElementById('pay-btn-label').textContent =
+    `Bayar ${pkgLabel} — ${payLabel}`;
+}
+
+// ═══════════════════════════════════════════
+// VALIDATE event form before payment
+// ═══════════════════════════════════════════
+function validateEventForm() {
+  const required = ['e-name','e-wa','e-email','e-role','e-evname','e-date','e-time','e-duration','e-loc'];
+  let valid = true;
+  required.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) {
+      el.classList.add('error');
+      valid = false;
+    } else {
+      el.classList.remove('error');
+    }
+  });
+  return valid;
+}
+
+function handlePayClick(e) {
+  if (!validateEventForm()) {
+    e.preventDefault();
+    document.getElementById('e-name').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  // Fill hidden formspree fields & submit in background
+  document.getElementById('fs-e-name').value     = document.getElementById('e-name').value;
+  document.getElementById('fs-e-wa').value       = document.getElementById('e-wa').value;
+  document.getElementById('fs-e-email').value    = document.getElementById('e-email').value;
+  document.getElementById('fs-e-role').value     = document.getElementById('e-role').value;
+  document.getElementById('fs-e-evname').value   = document.getElementById('e-evname').value;
+  document.getElementById('fs-e-date').value     = document.getElementById('e-date').value;
+  document.getElementById('fs-e-time').value     = document.getElementById('e-time').value;
+  document.getElementById('fs-e-duration').value = document.getElementById('e-duration').value;
+  document.getElementById('fs-e-loc').value      = document.getElementById('e-loc').value;
+  document.getElementById('fs-e-guests').value   = document.getElementById('e-guests').value;
+  document.getElementById('fs-e-frame').value    = document.getElementById('e-frame').value;
+  document.getElementById('fs-e-pkg').value      = currentPkg === 'half' ? 'Half Day (IDR 1.500.000)' : 'Full Day (IDR 2.500.000)';
+  document.getElementById('fs-e-pay').value      = currentPay === 'full' ? 'Full Payment' : 'DP 30%';
+  document.getElementById('fs-e-notes').value    = document.getElementById('e-notes').value;
+
+  // Submit form data silently via fetch
+  const form = document.getElementById('formspree-event');
+  const data = new FormData(form);
+
+  // Set _replyto so you can reply directly to customer
+  data.set('_replyto', document.getElementById('e-email').value);
+
+  fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+    .catch(() => {}); // fail silently, payment still opens
+
+  // Send customer a copy via mailto (opens in background)
+  sendCustomerCopy('event', {
+    nama:    document.getElementById('e-name').value,
+    email:   document.getElementById('e-email').value,
+    event:   document.getElementById('e-evname').value,
+    tanggal: document.getElementById('e-date').value,
+    lokasi:  document.getElementById('e-loc').value,
+    paket:   currentPkg === 'half' ? 'Half Day — IDR 1.500.000' : 'Full Day — IDR 2.500.000',
+    bayar:   currentPay === 'full' ? 'Full Payment' : 'Down Payment 30%',
+  });
+
+  // Set correct payment link
+  const key = currentPkg + '_' + currentPay;
+  const link = PAYMENT_LINKS[key];
+  document.getElementById('pay-link-btn').href = link;
+  updateSteps(3);
+}
+
+// ═══════════════════════════════════════════
+// COLLAB FORM SUBMIT
+// ═══════════════════════════════════════════
+function submitCollab() {
+  const required = ['c-name','c-wa','c-email','c-role','c-venue','c-vtype','c-addr'];
+  let valid = true;
+  required.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) { el.classList.add('error'); valid = false; }
+    else el.classList.remove('error');
+  });
+  if (!valid) { document.getElementById('c-name').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+
+  // Fill hidden fields
+  document.getElementById('fs-c-name').value    = document.getElementById('c-name').value;
+  document.getElementById('fs-c-wa').value      = document.getElementById('c-wa').value;
+  document.getElementById('fs-c-email').value   = document.getElementById('c-email').value;
+  document.getElementById('fs-c-role').value    = document.getElementById('c-role').value;
+  document.getElementById('fs-c-venue').value   = document.getElementById('c-venue').value;
+  document.getElementById('fs-c-vtype').value   = document.getElementById('c-vtype').value;
+  document.getElementById('fs-c-addr').value    = document.getElementById('c-addr').value;
+  document.getElementById('fs-c-traffic').value = document.getElementById('c-traffic').value;
+  document.getElementById('fs-c-ref').value     = document.getElementById('c-ref').value;
+  document.getElementById('fs-c-notes').value   = document.getElementById('c-notes').value;
+
+  const form = document.getElementById('formspree-collab');
+  const data = new FormData(form);
+  data.set('_replyto', document.getElementById('c-email').value);
+
+  fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+    .then(() => {
+      sendCustomerCopy('collab', {
+        nama:  document.getElementById('c-name').value,
+        email: document.getElementById('c-email').value,
+        venue: document.getElementById('c-venue').value,
+        alamat: document.getElementById('c-addr').value,
+      });
+      updateSteps(3); showScreen('screen-success-collab');
+    })
+    .catch(() => { updateSteps(3); showScreen('screen-success-collab'); });
+}
+
+// ═══════════════════════════════════════════
+// CUSTOMER COPY — buka mailto di background
+// Kirim ringkasan form ke email customer
+// ═══════════════════════════════════════════
+function sendCustomerCopy(type, d) {
+  try {
+    let subject, body;
+    if (type === 'event') {
+      subject = encodeURIComponent('[SSC] Konfirmasi Booking Event — ' + d.event);
+      body = encodeURIComponent(
+`Halo ${d.nama},
+
+Terima kasih sudah melakukan booking Side Story Club! ✦
+Berikut ringkasan permintaanmu:
+
+───────────────────────────
+Jenis Booking : Event Rental
+Nama Acara    : ${d.event}
+Tanggal       : ${d.tanggal}
+Lokasi        : ${d.lokasi}
+Paket         : ${d.paket}
+Tipe Bayar    : ${d.bayar}
+───────────────────────────
+
+Tim SSC akan segera menghubungimu via WhatsApp untuk konfirmasi detail.
+Jika ada pertanyaan, balas email ini atau hubungi kami di:
+WhatsApp: 0881-3215-958
+Instagram: @sidestory_club
+
+"The main quest can wait." ✦
+— Side Story Club`
+      );
+    } else {
+      subject = encodeURIComponent('[SSC] Konfirmasi Permintaan Kolaborasi — ' + d.venue);
+      body = encodeURIComponent(
+`Halo ${d.nama},
+
+Terima kasih sudah mengajukan kolaborasi dengan Side Story Club! ✦
+Berikut ringkasan permintaanmu:
+
+───────────────────────────
+Jenis Booking : Kiosk Collab
+Nama Venue    : ${d.venue}
+Alamat        : ${d.alamat}
+───────────────────────────
+
+Tim SSC akan menghubungimu via WhatsApp atau Email dalam 1×24 jam.
+Jika ada pertanyaan, balas email ini atau hubungi kami di:
+WhatsApp: 0881-3215-958
+Instagram: @sidestory_club
+
+"The main quest can wait." ✦
+— Side Story Club`
+      );
+    }
+    // Buka mailto di iframe tersembunyi agar tidak interrupt halaman
+    const a = document.createElement('a');
+    a.href = `mailto:${d.email}?subject=${subject}&body=${body}`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => a.remove(), 1000);
+  } catch(e) { /* fail silently */ }
+}
+
+// ═══════════════════════════════════════════
+// CHECK URL PARAM (post-submit redirect)
+// ═══════════════════════════════════════════
+const urlParam = new URLSearchParams(window.location.search).get('submitted');
+if (urlParam === 'collab') {
+  updateSteps(3); showScreen('screen-success-collab');
+}
+
+// Init
+updatePayAmounts();
+</script>
+</body>
+</html>

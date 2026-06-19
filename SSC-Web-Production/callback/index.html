@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Side Story Club — Payment</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1a1a18; --ink-mid: #3a3835; --ink-light: #6b6860;
+    --paper: #f5f2ec; --paper-dark: #e8e4da; --paper-mid: #ede9e0;
+  }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: 'Special Elite', serif;
+    min-height: 100vh; display: flex;
+    align-items: center; justify-content: center; padding: 2rem;
+  }
+  .card {
+    border: 1.5px dashed var(--ink-mid);
+    padding: 3rem 2.5rem; max-width: 460px; width: 100%;
+    text-align: center; background: var(--paper); position: relative;
+  }
+  .card::before, .card::after {
+    content: ''; position: absolute; width: 16px; height: 16px;
+    border-color: var(--ink); border-style: solid;
+  }
+  .card::before { top: -2px; left: -2px; border-width: 2px 0 0 2px; }
+  .card::after  { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; }
+
+  .eyebrow { font-size: 0.65rem; letter-spacing: 0.2em; color: var(--ink-light); margin-bottom: 1.5rem; }
+  .logo { width: 70px; height: 70px; object-fit: contain; margin: 0 auto 1.5rem; display: block; }
+
+  #state-checking { display: block; }
+  #state-success  { display: none; }
+  #state-failed   { display: none; }
+
+  h2 { font-family: 'Cinzel Decorative', serif; font-size: 1.1rem; margin-bottom: 0.8rem; color: var(--ink); }
+  p.sub { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.95rem; color: var(--ink-mid); line-height: 1.7; }
+
+  .load-wrap { margin: 1.8rem 0 0.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+  .load-track { width: 180px; height: 10px; border: 1px solid var(--ink-light); background: var(--paper-dark); border-radius: 2px; overflow: hidden; }
+  .load-fill  { height: 100%; width: 0%; background: repeating-linear-gradient(90deg, var(--ink-light) 0px, var(--ink-light) 6px, transparent 6px, transparent 9px); border-radius: 1px; transition: width 0.4s ease; }
+  .load-label { font-size: 0.68rem; letter-spacing: 0.1em; color: var(--ink-light); }
+
+  .ornament { color: var(--ink-light); margin: 1rem 0; font-size: 0.9rem; }
+  .crystal-wrap { margin: 1rem auto; width: 64px; }
+
+  .detail-box { border: 1px dashed var(--ink-light); background: var(--paper-mid); padding: 1rem 1.2rem; margin: 1.5rem 0; text-align: left; }
+  .detail-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.35rem 0; border-bottom: 1px dotted var(--ink-light); font-size: 0.82rem; }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-key   { color: var(--ink-light); letter-spacing: 0.06em; }
+  .detail-value { font-family: 'IM Fell English', serif; color: var(--ink-mid); }
+
+  .tip { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.82rem; color: var(--ink-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed var(--ink-light); }
+</style>
+</head>
+<body>
+<div class="card">
+  <p class="eyebrow">✦ &nbsp; Side Story Club &nbsp; ✦</p>
+  <img class="logo"
+    src="https://res.cloudinary.com/dnqt7v5iv/image/upload/f_auto,q_auto/v1780756193/logo_xsbo10.png"
+    alt="SSC Logo"/>
+
+  <!-- STATE: CHECKING -->
+  <div id="state-checking">
+    <h2>Verifying Payment...</h2>
+    <p class="sub">Tunggu sebentar, kami sedang mengkonfirmasi pembayaranmu.</p>
+    <div class="load-wrap">
+      <div class="load-track"><div class="load-fill" id="progress-bar"></div></div>
+      <span class="load-label" id="progress-label">Connecting to guild...</span>
+    </div>
+  </div>
+
+  <!-- STATE: SUCCESS -->
+  <div id="state-success">
+    <div class="crystal-wrap">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="32,6 46,22 40,48 24,48 18,22" stroke="#3a3835" stroke-width="1.4" fill="#ede9e0"/>
+        <polygon points="32,6 46,22 32,28 18,22" stroke="#3a3835" stroke-width="1" fill="#d8d4ca"/>
+        <polygon points="24,48 40,48 32,28" stroke="#3a3835" stroke-width="1" fill="#c8c4ba"/>
+        <ellipse cx="32" cy="50" rx="10" ry="3.5" stroke="#3a3835" stroke-width="1" fill="#e8e4da"/>
+        <path d="M24 30 L29 36 L40 22" stroke="#3a3835" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
+    <h2>Quest Accepted!</h2>
+    <p class="sub">Pembayaran berhasil.<br/>Silakan kembali ke kiosk — sesi fotomu sudah dimulai!</p>
+
+    <div class="detail-box" id="detail-box">
+      <div class="detail-row">
+        <span class="detail-key">Order ID</span>
+        <span class="detail-value" id="d-order">—</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-key">Amount</span>
+        <span class="detail-value" id="d-amount">—</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-key">Method</span>
+        <span class="detail-value" id="d-method">—</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-key">Reference</span>
+        <span class="detail-value" id="d-ref">—</span>
+      </div>
+    </div>
+
+    <p class="tip">✦ Simpan halaman ini sebagai bukti transaksi. Digital copy fotomu akan tersedia 7 hari via QR yang dicetak.</p>
+  </div>
+
+  <!-- STATE: FAILED / PENDING -->
+  <div id="state-failed">
+    <h2>Payment Incomplete</h2>
+    <p class="sub">Pembayaran belum terkonfirmasi atau terjadi kendala. Hubungi kami jika dana sudah terpotong.</p>
+    <div class="ornament">✦</div>
+    <p class="sub" style="font-size:0.82rem;">
+      <!-- GANTI nomor WhatsApp ini dengan nomor SSC kamu -->
+      WhatsApp: <strong>0881-3215-958</strong><br/>
+      Sertakan screenshot bukti transfer & Order ID.
+    </p>
+  </div>
+</div>
+
+<script>
+  const params    = new URLSearchParams(window.location.search);
+  const orderId   = params.get("merchantOrderId") || "";
+  const result    = params.get("resultCode")      || "";
+  const reference = params.get("reference")       || "";
+
+  const bar   = document.getElementById("progress-bar");
+  const label = document.getElementById("progress-label");
+
+  // Animasi progress bar
+  const steps = [
+    { w: "20%", text: "Connecting to guild..." },
+    { w: "50%", text: "Verifying signature..." },
+    { w: "80%", text: "Confirming payment..." },
+  ];
+  let step = 0;
+  const tick = setInterval(() => {
+    if (step >= steps.length) { clearInterval(tick); return; }
+    bar.style.width   = steps[step].w;
+    label.textContent = steps[step].text;
+    step++;
+  }, 800);
+
+  setTimeout(() => {
+    clearInterval(tick);
+    bar.style.width = "100%";
+
+    if (result === "00") {
+      document.getElementById("state-checking").style.display = "none";
+      document.getElementById("state-success").style.display  = "block";
+
+      const rawAmount = params.get("amount") || "10000";
+      document.getElementById("d-order").textContent  = orderId || "—";
+      document.getElementById("d-amount").textContent = "IDR " + parseInt(rawAmount).toLocaleString("id-ID");
+      document.getElementById("d-method").textContent = params.get("paymentMethod") || "QRIS";
+      document.getElementById("d-ref").textContent    = reference || "—";
+    } else {
+      document.getElementById("state-checking").style.display = "none";
+      document.getElementById("state-failed").style.display   = "block";
+    }
+  }, 3000);
+</script>
+</body>
+</html>
