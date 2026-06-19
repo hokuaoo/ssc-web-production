@@ -1022,7 +1022,7 @@
     <li><a href="#inventory">The Inventory</a></li>
     <li><a href="#quest">Quest Flow</a></li>
     <li><a href="#rewards">Rewards</a></li>
-    <li><a href="/booking/" style="color:var(--ink); font-weight:600;">Book an Event</a></li>
+    <li><a href="#book" style="color:var(--ink); font-weight:600;">Book an Event</a></li>
     <li><a href="#footprint">Footprint</a></li>
     <li><a href="#contact">Guild Master</a></li>
   </ul>
@@ -1219,8 +1219,8 @@
         <div class="step-num solid-box">III</div>
         <div class="step-content">
           <h3>Pose &amp; Capture</h3>
-          <p>The camera captures 3–4 frames. Raw, unedited, and perfectly authentic. No filters. No pretense.</p>
-          <span class="step-badge">3–4 frames</span>
+          <p>The camera captures 1-2 frames. Raw, unedited, and perfectly authentic. No filters. No pretense.</p>
+          <span class="step-badge">1-2 frames</span>
         </div>
       </div>
 
@@ -1270,7 +1270,7 @@
         </ul>
         <div style="margin-top:1.5rem; padding-top:1rem; border-top:1px dashed var(--ink-light);">
           <p style="font-family:'IM Fell English',serif;font-style:italic;font-size:0.82rem;color:var(--ink-light);margin-bottom:0.8rem;">
-            Punya venue keren? Bawa SSC ke tempat kamu.
+            Punya venue keren? Bawa SSC ke tempat kamu~
           </p>
           <a href="https://wa.me/628813215958?text=Halo%20SSC!%20Saya%20tertarik%20untuk%20collab%20hosting%20kiosk%20di%20venue%20saya." target="_blank" rel="noopener" class="btn-collab">
             ✦ &nbsp; Open for Collab
@@ -1300,7 +1300,7 @@
           <li><span class="perk-tick">✓</span> Full day: IDR 2,500,000</li>
         </ul>
         <div style="margin-top:1.5rem; padding-top:1rem; border-top:1px dashed var(--ink-light);">
-          <a href="/booking/" class="btn-primary" style="display:block; text-align:center; text-decoration:none;">
+          <a href="#book" class="btn-primary" style="display:block; text-align:center; text-decoration:none;">
             ➤ &nbsp; Book an Event
           </a>
         </div>
@@ -1310,6 +1310,100 @@
     <p style="text-align:center; margin-top:2rem; font-family:'IM Fell English',serif; font-style:italic; font-size:0.9rem; color:var(--ink-light);">
       ✦ &nbsp; Need something custom? Reach out — we'll craft the right package. &nbsp; ✦
     </p>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- BOOK AN EVENT -->
+<section id="book" style="background:var(--paper-mid); border-top:1px dashed var(--ink-light); border-bottom:1px dashed var(--ink-light); padding:0;">
+  <div class="section-inner reveal" style="padding: 5rem 2rem;">
+    <div class="section-header">
+      <span class="section-label">Guild Event</span>
+      <h2>Book an Event</h2>
+      <div class="ornament-line">✦</div>
+      <p class="fell-i" style="font-size:0.95rem;color:var(--ink-mid);margin-top:0.5rem;max-width:480px;text-align:center;">
+        Isi form di bawah — kami akan konfirmasi ketersediaan dan kirim Payment Link dalam 1×24 jam.
+      </p>
+    </div>
+
+    <div class="book-layout">
+
+      <!-- PACKAGE SELECTOR -->
+      <div class="book-packages">
+        <div class="book-pkg active" id="pkg-half" onclick="selectPackage('half')">
+          <div class="pkg-radio"><span class="pkg-dot"></span></div>
+          <div class="pkg-info">
+            <span class="pkg-name">Half Day Quest</span>
+            <span class="pkg-detail">Max 4 hours · Unlimited prints</span>
+          </div>
+          <span class="pkg-price">IDR 1,500,000</span>
+        </div>
+        <div class="book-pkg" id="pkg-full" onclick="selectPackage('full')">
+          <div class="pkg-radio"><span class="pkg-dot"></span></div>
+          <div class="pkg-info">
+            <span class="pkg-name">Full Day Quest</span>
+            <span class="pkg-detail">Max 8 hours · Unlimited prints</span>
+          </div>
+          <span class="pkg-price">IDR 2,500,000</span>
+        </div>
+        <p style="font-family:'IM Fell English',serif;font-style:italic;font-size:0.8rem;color:var(--ink-light);margin-top:0.8rem;">
+          ✦ Custom event frame + Free Play mode tersedia untuk kedua paket.
+        </p>
+      </div>
+
+      <!-- FORM -->
+      <div class="book-form dashed-box">
+        <div class="book-form-grid">
+          <div class="book-field">
+            <label>Nama / Organisasi</label>
+            <input type="text" id="f-name" placeholder="Nama kamu atau brand" />
+          </div>
+          <div class="book-field">
+            <label>Nomor WhatsApp</label>
+            <input type="tel" id="f-wa" placeholder="08xx-xxxx-xxxx" />
+          </div>
+          <div class="book-field">
+            <label>Jenis Event</label>
+            <input type="text" id="f-type" placeholder="Wedding · Brand Activation · Private Party" />
+          </div>
+          <div class="book-field">
+            <label>Tanggal Event</label>
+            <input type="text" id="f-date" placeholder="DD / MM / YYYY" />
+          </div>
+          <div class="book-field">
+            <label>Lokasi Event</label>
+            <input type="text" id="f-loc" placeholder="Venue, Kota" />
+          </div>
+          <div class="book-field">
+            <label>Estimasi Tamu</label>
+            <input type="text" id="f-guests" placeholder="~50 orang" />
+          </div>
+        </div>
+        <div class="book-field" style="margin-top:0.8rem;">
+          <label>Catatan Tambahan (opsional)</label>
+          <textarea id="f-notes" rows="3" placeholder="Custom frame, tema khusus, atau pertanyaan lain..."></textarea>
+        </div>
+
+        <div class="book-actions">
+          <button class="btn-primary" onclick="submitBooking()" id="book-submit-btn">
+            ➤ &nbsp; Kirim Permintaan
+          </button>
+          <p class="book-note fell-i">
+            Setelah kami konfirmasi, Payment Link Midtrans akan dikirim ke WhatsApp kamu.
+          </p>
+        </div>
+
+        <div id="book-success" style="display:none;" class="book-success-msg">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3a3835" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div>
+            <strong>Quest request sent!</strong><br/>
+            Kami akan menghubungi kamu via WhatsApp dalam 1×24 jam.
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -1452,7 +1546,7 @@
   // Tab Locations kolom: Name | Address | Status
   // Tab Events kolom:    Date | Name | Description | Tags | Highlight
   // ════════════════════════════════════════════
-  const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID_HERE';
+  const SHEET_ID = '1gDx_BK43MRbJ7TUPC2pt9dbg8AduV3gDla61-uS4wzM';
 
   const SHEET_URLS = {
     locations: `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Locations`,
