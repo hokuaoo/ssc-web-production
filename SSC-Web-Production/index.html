@@ -7,7 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=swap" rel="stylesheet"/>
-
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/dnqt7v5iv/image/upload/f_auto,q_auto/v1780756193/logo_xsbo10.png"/>
+<link rel="shortcut icon" type="image/png" href="https://res.cloudinary.com/dnqt7v5iv/image/upload/f_auto,q_auto/v1780756193/logo_xsbo10.png"/>
+ 
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1391,6 +1393,104 @@
 
   </div>
 </section>
+
+<!-- OUR GALLERY -->
+<section id="gallery">
+  <div class="section-inner reveal">
+    <div class="section-header">
+      <span class="section-label">Memory Codex</span>
+      <h2>Recent Adventures</h2>
+      <div class="ornament-line">✦</div>
+    </div>
+
+    <div class="footprint-block">
+      <p class="footprint-block-sub fell-i" style="text-align:center;">
+        A glimpse of the small victories captured at our save points.
+      </p>
+
+      <div class="fp-gallery-grid" id="fp-gallery">
+        <!-- diisi oleh JS dari Google Sheet Galeri Web SSC -->
+        <p style="grid-column:1/-1;text-align:center;color:var(--ink-light);font-style:italic;padding:2rem 0;">Loading memories...</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* Gallery grid — sesuai gaya fp-locations-grid */
+  .fp-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .fp-gallery-item {
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    border: 1.5px dashed var(--ink-mid, #3a3835);
+    background: var(--paper, #f5f2ec);
+    position: relative;
+  }
+  .fp-gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(15%);
+    transition: transform 0.3s;
+  }
+  .fp-gallery-item:hover img {
+    transform: scale(1.03);
+  }
+</style>
+
+<script>
+  // ══════════════════════════════════════════════
+  // GALERI FOTO — auto-fetch dari Google Sheet "Galeri Web SSC"
+  // ══════════════════════════════════════════════
+  const GALLERY_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQN4pbosxbqeHwo9LURKSx_R6Kss0-DpoJmj8q6E5cLQ4455WcvDGcUUa1fXr91mICPVTPMTWRTaaRd/pub?gid=0&single=true&output=csv';
+  const GALLERY_MAX = 8;
+
+  async function loadGallery() {
+    const target = document.getElementById('fp-gallery');
+    if (!target) return;
+
+    try {
+      const res = await fetch(GALLERY_CSV_URL);
+      const text = await res.text();
+      const lines = text.trim().split('\n').slice(1);
+
+      const photos = lines.map(line => {
+        const cols = line.split(',');
+        return {
+          url: (cols[0] || '').replace(/^"|"$/g, '').trim(),
+          tanggal: (cols[1] || '').replace(/^"|"$/g, '').trim(),
+          project: (cols[2] || '').replace(/^"|"$/g, '').trim(),
+        };
+      }).filter(p => p.url && p.url.startsWith('http'));
+
+      const shown = photos.reverse().slice(0, GALLERY_MAX);
+
+      if (shown.length === 0) {
+        target.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--ink-light);font-style:italic;padding:2rem 0;">No memories yet.</p>';
+        return;
+      }
+
+      target.innerHTML = shown.map(p => `
+        <div class="fp-gallery-item">
+          <img src="${p.url.replace('/upload/', '/upload/w_400,h_533,c_fill,q_auto,f_auto/')}"
+               alt="SSC memory ${p.project}"
+               loading="lazy">
+        </div>
+      `).join('');
+    } catch (err) {
+      console.warn('Gallery load error:', err);
+      target.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--ink-light);font-style:italic;padding:2rem 0;">Could not load gallery.</p>';
+    }
+  }
+
+  loadGallery();
+</script>
 
 <hr class="divider"/>
 
